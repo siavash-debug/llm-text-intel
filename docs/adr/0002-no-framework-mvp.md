@@ -19,7 +19,7 @@ hide exactly what this project exists to teach.
 For the MVP:
 
 - No LLM orchestration framework. The LLM client is a small hand-written
-  interface (see ADR 0003, once written) around the Anthropic SDK.
+  interface (see ADR 0003, once written) around the Groq SDK.
 - No web framework yet. CLI is the first interface.
 - No async processing. Requests are synchronous, single-request-at-a-time.
 - No database. Results are returned to the caller (CLI stdout); nothing is

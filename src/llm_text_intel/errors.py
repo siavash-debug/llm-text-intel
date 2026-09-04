@@ -13,3 +13,17 @@ class AnalysisError(Exception):
 
 class ConfigurationError(AnalysisError):
     """Required configuration is missing or invalid."""
+
+
+class LLMTransientError(AnalysisError):
+    """A provider call failed in a way that may succeed if retried.
+
+    E.g. rate limiting, timeouts, 5xx server errors.
+    """
+
+
+class LLMPermanentError(AnalysisError):
+    """A provider call failed in a way that will not succeed if retried.
+
+    E.g. authentication failure, invalid request.
+    """

@@ -20,7 +20,7 @@ Modular monolith. Core business logic (`pipeline`, `schemas`, `prompts`,
 first interface; a FastAPI interface can be added later as a thin wrapper
 over the same `pipeline.analyze()` entry point, without duplicating logic.
 
-The LLM provider sits behind a small `LLMClient` interface. Anthropic is the
+The LLM provider sits behind a small `LLMClient` interface. Groq is the
 first (and for now only) implementation.
 
 See [`docs/adr/`](docs/adr/) for the reasoning behind these decisions.
@@ -33,5 +33,5 @@ ruff check .
 pytest
 ```
 
-Copy `.env.example` to `.env` and set `ANTHROPIC_API_KEY` before running
+Copy `.env.example` to `.env` and set `GROQ_API_KEY` before running
 anything that calls the real API.

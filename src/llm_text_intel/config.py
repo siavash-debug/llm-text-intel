@@ -15,8 +15,8 @@ from llm_text_intel.errors import ConfigurationError
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_prefix="", extra="ignore")
 
-    anthropic_api_key: str = Field(min_length=1)
-    model_name: str = "claude-sonnet-5"
+    groq_api_key: str = Field(min_length=1)
+    model_name: str = "llama-3.3-70b-versatile"
     max_retries: int = Field(default=2, ge=0)
     max_input_chars: int = Field(default=20_000, gt=0)
     max_output_tokens: int = Field(default=1024, gt=0)
