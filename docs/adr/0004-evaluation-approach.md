@@ -17,11 +17,13 @@ Start with rule-based scoring only (`tests/eval/scoring.py`): each golden
 example carries static, deterministic expectations (keyword-count bounds,
 title/summary word-count bounds), and `score_example()` checks a produced
 `TextAnalysis` against them with no LLM call involved. This part is free
-and deterministic (`tests/eval/test_scoring.py`); it lives outside
-`tests/unit/` since it evaluates the eval harness itself, not application
-code, but is run alongside the unit suite as a matter of practice
-(`pytest tests/unit tests/eval/test_scoring.py` — see README's Testing
-section), not automatically picked up by `pytest tests/unit` alone.
+and deterministic (`tests/eval/test_scoring.py`, plus
+`tests/eval/test_reporting.py` for the result-formatting helper); these
+live outside `tests/unit/` since they evaluate the eval harness itself,
+not application code, but are run alongside the unit suite as a matter of
+practice (`pytest tests/unit tests/eval/test_scoring.py
+tests/eval/test_reporting.py` — see README's Testing section), not
+automatically picked up by `pytest tests/unit` alone.
 
 The end-to-end check that actually calls the real Groq API
 (`tests/eval/test_eval_suite.py::test_golden_set_pass_rate_meets_threshold`)

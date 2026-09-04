@@ -94,7 +94,7 @@ stderr as JSON lines.
 
 ```bash
 ruff check .
-pytest tests/unit tests/eval/test_scoring.py   # fast, deterministic, no network calls, no cost
+pytest tests/unit tests/eval/test_scoring.py tests/eval/test_reporting.py   # fast, deterministic, no network calls, no cost
 ```
 
 The live evaluation check makes real calls to the Groq API against the
