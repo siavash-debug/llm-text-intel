@@ -29,19 +29,24 @@ protocol and `llm_text_intel.schemas.LLMResponse` — no file outside
 
 ```text
 src/llm_text_intel/
-├── config.py       # env-based Settings (GROQ_API_KEY, model, retries, limits)
-├── schemas.py       # TextAnalysis, LLMResponse (Pydantic contracts)
-├── errors.py        # AnalysisError taxonomy
-├── prompts/          # pure prompt construction (analyze.py)
-└── llm/              # LLMClient protocol + GroqClient implementation
+├── config.py        # env-based Settings (GROQ_API_KEY, model, retries, limits, cost rates)
+├── schemas.py        # TextAnalysis, LLMResponse (Pydantic contracts)
+├── errors.py         # AnalysisError taxonomy
+├── prompts/           # pure prompt construction (analyze.py)
+├── llm/                # LLMClient protocol + GroqClient implementation
+├── pipeline.py        # analyze(): orchestration, parsing, bounded retry
+├── observability.py   # structured per-request logging
+└── interfaces/
+    └── cli.py          # CLI entry point (thin wrapper over the pipeline)
 
 tests/
-└── unit/             # fast, no network; mocks/fakes the LLM client boundary
+├── unit/              # fast, deterministic, no network calls
+└── eval/               # rule-based scoring (free) + opt-in live-provider eval
+
+eval_data/               # golden dataset for the evaluation harness
 ```
 
-This structure will grow (`pipeline.py`, `interfaces/`, `observability.py`,
-`tests/eval/`, `eval_data/`) as approved phases land — see the roadmap for
-what's planned versus implemented.
+See [`docs/ROADMAP.md`](docs/ROADMAP.md) for what's planned beyond this.
 
 ## Engineering principles
 

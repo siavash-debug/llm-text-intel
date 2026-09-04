@@ -19,7 +19,8 @@ hide exactly what this project exists to teach.
 For the MVP:
 
 - No LLM orchestration framework. The LLM client is a small hand-written
-  interface (see ADR 0003, once written) around the Groq SDK.
+  interface around the Groq SDK; retry behavior around it is documented in
+  [ADR 0003](0003-bounded-retry-strategy.md).
 - No web framework yet. CLI is the first interface.
 - No async processing. Requests are synchronous, single-request-at-a-time.
 - No database. Results are returned to the caller (CLI stdout); nothing is
