@@ -21,8 +21,10 @@ they need — pure, unit-testable, no network/LLM/CLI code.
 
 Note: the original API key field/default were later renamed from
 Anthropic-specific values to Groq-specific values in Phase 3 (see
-[phase-3.md](phase-3.md)); this doc reflects the schemas/config as they
-exist today.
+[phase-3.md](phase-3.md)). `Settings` also gained two cost-estimation
+fields in Phase 7 (`input_cost_per_million_tokens`,
+`output_cost_per_million_tokens`) not described below — this doc reflects
+the scope of Phase 1 itself, not the current full state of `config.py`.
 
 ## Design decisions
 

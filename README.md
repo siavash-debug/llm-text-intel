@@ -99,10 +99,12 @@ pytest tests/unit tests/eval/test_scoring.py   # fast, deterministic, no network
 
 The live evaluation check makes real calls to the Groq API against the
 golden dataset and costs money — it is excluded from the commands above and
-must be run explicitly, with a real `GROQ_API_KEY` set:
+must be run explicitly, with `GROQ_API_KEY` exported in your shell
+environment (a `.env` file alone is not enough — the skip check only looks
+at the process environment):
 
 ```bash
 pytest tests/eval -m eval -v
 ```
 
-It is skipped automatically if no `GROQ_API_KEY` is present.
+It is skipped automatically if `GROQ_API_KEY` is not exported.
