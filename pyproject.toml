@@ -14,6 +14,9 @@ dependencies = [
     "groq>=1.7",
 ]
 
+[project.scripts]
+llm-text-intel = "llm_text_intel.interfaces.cli:run"
+
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0",
