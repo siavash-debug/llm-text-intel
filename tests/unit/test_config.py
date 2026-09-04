@@ -30,6 +30,12 @@ class TestSettings:
         assert settings.max_retries == 2
         assert settings.max_input_chars == 20_000
         assert settings.max_output_tokens == 1024
+        assert settings.input_cost_per_million_tokens == 0.59
+        assert settings.output_cost_per_million_tokens == 0.79
+
+    def test_negative_cost_rate_rejected(self) -> None:
+        with pytest.raises(Exception):  # noqa: B017 - pydantic ValidationError
+            _settings(groq_api_key="gsk-test", input_cost_per_million_tokens=-1.0)
 
     def test_missing_api_key_raises_configuration_error(
         self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path

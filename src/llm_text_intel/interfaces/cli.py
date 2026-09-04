@@ -1,9 +1,11 @@
 """CLI interface: the first interface over the core pipeline.
 
 This module only wires configuration and a client together, calls
-``pipeline.analyze``, and formats the result or error for the terminal. It
-contains no business logic of its own — a future FastAPI interface would
-call the same ``pipeline.analyze`` the same way (see ADR 0001).
+``observability.analyze_with_observability`` (which calls
+``pipeline.analyze`` unchanged, adding only a logging side effect), and
+formats the result or error for the terminal. It contains no business logic
+of its own — a future FastAPI interface would call the same function the
+same way (see ADR 0001).
 
 ``client``/``settings`` are accepted as optional parameters purely to allow
 tests to inject a fake client and settings without touching real
@@ -13,6 +15,7 @@ environment variables or the network; the real CLI entry point
 
 import argparse
 import json
+import logging
 import sys
 from collections.abc import Sequence
 
@@ -20,7 +23,7 @@ from llm_text_intel.config import Settings, load_settings
 from llm_text_intel.errors import AnalysisError
 from llm_text_intel.llm.client import LLMClient
 from llm_text_intel.llm.groq_client import GroqClient
-from llm_text_intel.pipeline import analyze
+from llm_text_intel.observability import analyze_with_observability
 
 
 def main(
@@ -38,7 +41,7 @@ def main(
             settings = load_settings()
         if client is None:
             client = GroqClient(api_key=settings.groq_api_key, model=settings.model_name)
-        result = analyze(text, client=client, settings=settings)
+        result = analyze_with_observability(text, client=client, settings=settings)
     except AnalysisError as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
@@ -62,7 +65,12 @@ def _parse_args(argv: Sequence[str] | None) -> argparse.Namespace:
 
 
 def run() -> None:
-    """Console-script entry point."""
+    """Console-script entry point.
+
+    Configures logging (structured records to stderr) only here, not in
+    ``main()``, so unit tests calling ``main()`` directly stay unaffected.
+    """
+    logging.basicConfig(level=logging.INFO, format="%(message)s", stream=sys.stderr)
     sys.exit(main())
 
 

@@ -21,6 +21,13 @@ class Settings(BaseSettings):
     max_input_chars: int = Field(default=20_000, gt=0)
     max_output_tokens: int = Field(default=1024, gt=0)
 
+    # Approximate on-demand pricing for the default model (USD per 1M
+    # tokens), used only to estimate request cost in observability logs.
+    # Provider pricing changes over time and by model; override via env if
+    # it drifts, rather than treating these as authoritative.
+    input_cost_per_million_tokens: float = Field(default=0.59, ge=0)
+    output_cost_per_million_tokens: float = Field(default=0.79, ge=0)
+
 
 def load_settings() -> Settings:
     """Load settings from the environment, raising a clear error if invalid."""
