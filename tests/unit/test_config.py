@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 
 from llm_text_intel.config import Settings, load_settings
@@ -29,9 +31,13 @@ class TestSettings:
         assert settings.max_input_chars == 20_000
         assert settings.max_output_tokens == 1024
 
-    def test_missing_api_key_raises_configuration_error(self) -> None:
-        # No .env file is committed to the repo and _clean_env stripped the
-        # relevant environment variables, so this is missing by construction.
+    def test_missing_api_key_raises_configuration_error(
+        self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+    ) -> None:
+        # load_settings() reads ".env" relative to the cwd. Run from a
+        # directory with no .env so this test is independent of whether the
+        # developer has a real .env in the project root.
+        monkeypatch.chdir(tmp_path)
         with pytest.raises(ConfigurationError):
             load_settings()
 
