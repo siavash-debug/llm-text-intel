@@ -26,6 +26,11 @@ dev = [
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.pytest.ini_options]
+markers = [
+    "eval: real-provider evaluation checks (costs money, opt-in only, excluded from tests/unit).",
+]
+
 [tool.ruff]
 line-length = 100
 src = ["src", "tests"]
