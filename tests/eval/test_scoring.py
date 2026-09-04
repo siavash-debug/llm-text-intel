@@ -99,6 +99,53 @@ class TestBuildReport:
         assert report.prompt_version == "42"
 
 
+class TestKeywordContractAlignment:
+    """Regression coverage for the 1-15 keyword contract (ADR 0005).
+
+    Confirms the golden set's keyword bounds match the production
+    TextAnalysis schema (1-15) exactly, and that score_example accepts the
+    full 1-15 range at its boundaries - guarding against the evaluation
+    silently drifting narrower than the schema again.
+    """
+
+    def test_golden_set_keyword_bounds_match_the_production_contract(self) -> None:
+        examples = load_golden_set(GOLDEN_SET_PATH)
+        assert examples, "golden set must not be empty"
+        for example in examples:
+            assert example.min_keywords == 1, example.id
+            assert example.max_keywords == 15, example.id
+
+    def test_minimum_contract_keyword_count_passes(self) -> None:
+        contract = _example(min_keywords=1, max_keywords=15)
+        analysis = _analysis(keywords=["only-keyword"])
+        result = score_example(contract, analysis)
+        assert result.passed is True
+
+    def test_maximum_contract_keyword_count_passes(self) -> None:
+        contract = _example(min_keywords=1, max_keywords=15)
+        analysis = _analysis(keywords=[f"kw{i}" for i in range(15)])
+        result = score_example(contract, analysis)
+        assert result.passed is True
+
+    def test_below_contract_minimum_fails(self) -> None:
+        # TextAnalysis itself forbids 0 keywords (schema min_length=1), so
+        # "below contract" is exercised via a stricter example contract
+        # (min_keywords=2) rather than an unconstructable TextAnalysis.
+        contract = _example(min_keywords=2, max_keywords=15)
+        analysis = _analysis(keywords=["only-one"])
+        result = score_example(contract, analysis)
+        assert result.passed is False
+
+    def test_above_contract_maximum_fails(self) -> None:
+        # TextAnalysis itself forbids 16 keywords (schema max_length=15), so
+        # "above contract" is exercised via a stricter example contract
+        # (max_keywords=14) rather than an unconstructable TextAnalysis.
+        contract = _example(min_keywords=1, max_keywords=14)
+        analysis = _analysis(keywords=[f"kw{i}" for i in range(15)])
+        result = score_example(contract, analysis)
+        assert result.passed is False
+
+
 class TestLoadGoldenSet:
     def test_loads_the_real_golden_set_file(self) -> None:
         examples = load_golden_set(GOLDEN_SET_PATH)
