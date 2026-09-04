@@ -27,3 +27,15 @@ class LLMPermanentError(AnalysisError):
 
     E.g. authentication failure, invalid request.
     """
+
+
+class InvalidInputError(AnalysisError):
+    """The text given to analyze() does not satisfy input constraints."""
+
+
+class InvalidOutputError(AnalysisError):
+    """The LLM's output did not satisfy the output contract after retries.
+
+    LLM output is treated as untrusted input: this is a normal, expected
+    failure mode, not just a defensive edge case.
+    """
